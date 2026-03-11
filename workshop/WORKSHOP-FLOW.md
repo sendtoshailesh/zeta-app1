@@ -23,7 +23,7 @@ QA → playwright-agent → run tests
 
 ## How Agents Work
 
-1. Go to your repo on GitHub → click the **Agents tab**
+1. Go to your repo on your GitHub Enterprise instance → click the **Agents tab**
 2. Click **New session**
 3. Click the agent dropdown → select the agent you want
 4. Type your instruction and press Enter
@@ -128,6 +128,9 @@ Assign it to Copilot:
 Issues tab → open [DATABASE] Issue → Assignees → select Copilot
 ```
 
+> If Copilot does not appear as an assignee option — coding agent is not
+> enabled for your account. Contact your IT or admin team.
+
 Wait for PR with updated schema, migration files, and seed data.
 
 **Review — check these things:**
@@ -150,10 +153,15 @@ Wait for Architect to confirm all DATABASE Issues are merged.
 
 Open the **Issues tab**. Find the issue labelled `backend` with the lowest Assignment Order step.
 
+Open it → read the `## Assignment Order` section → it tells you exactly when to assign it.
+
 Assign it to Copilot:
 ```
 Issues tab → open [BACKEND] Issue → Assignees → select Copilot
 ```
+
+> If Copilot does not appear as an assignee option — coding agent is not
+> enabled for your account. Contact your IT or admin team.
 
 Wait for PR with new files in `src/backend/routes/` and `src/backend/controllers/`
 
@@ -172,7 +180,7 @@ Wait for PR with new files in `src/backend/routes/` and `src/backend/controllers
 
 Once all BACKEND Issues are merged, go to the **Agents tab** → New session → select **unit-test-agent** and type:
 ```
-Generate Jest unit tests for the backend
+Generate Jest unit tests from the [BACKEND] Issue
 ```
 
 Wait for PR with test files in `src/backend/__tests__/`
@@ -195,10 +203,15 @@ Wait for Backend Dev to confirm all BACKEND Issues are merged.
 
 Open the **Issues tab**. Find the issue labelled `frontend` with the lowest Assignment Order step.
 
+Open it → read the `## Assignment Order` section → it tells you exactly when to assign it.
+
 Assign it to Copilot:
 ```
 Issues tab → open [FRONTEND] Issue → Assignees → select Copilot
 ```
+
+> If Copilot does not appear as an assignee option — coding agent is not
+> enabled for your account. Contact your IT or admin team.
 
 Wait for PR with new pages and components in `src/frontend/src/`
 
@@ -261,9 +274,13 @@ npx playwright test --ui
 ## Troubleshooting
 
 **Agent not in the dropdown**
-- Check you are on the correct repo
 - Refresh the page and try again
-- Ask your facilitator — Copilot coding agent may not be enabled
+- If still missing — coding agent may not be enabled for your account
+- Contact your IT or admin team — this is not a repo setting
+
+**Copilot not available as assignee on an Issue**
+- Coding agent is not enabled for your account
+- Contact your IT or admin team — not your facilitator
 
 **PR raised but looks wrong**
 - Scroll to the bottom of the PR
