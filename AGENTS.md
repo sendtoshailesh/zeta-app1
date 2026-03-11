@@ -82,12 +82,21 @@ cd src/backend && npm run dev
 # Frontend
 cd src/frontend && npm run dev
 
-# Database
-npx prisma migrate dev
-npx prisma generate
-npx prisma db seed
+# Database — always run from src/backend/ using npm scripts
+# This ensures the LOCAL Prisma version (^5.0.0) is used, not any globally installed version
+cd src/backend
+npm run db:migrate   # runs: prisma migrate dev
+npm run db:generate  # runs: prisma generate
+npm run db:seed      # runs: ts-node prisma/seed.ts
 
 # Tests
 npm run test
 npx playwright test
 ```
+
+## Prisma + SQLite Note
+Prisma enums ARE supported with SQLite — Prisma maps them to strings in the database internally.
+If `prisma validate` or `prisma migrate dev` fails with a version error, it means a globally
+installed Prisma is being invoked instead of the local one. Always use the `npm run db:*` scripts
+above, which resolve through `node_modules/.bin/prisma` and use the correct local version.
+Never downgrade enum fields to `String` types to work around a tooling version mismatch.
