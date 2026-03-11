@@ -14,7 +14,8 @@ Read the BRD and user story Issues and produce two files:
 
 ## Steps
 1. Read `docs/requirements/BRD.md` — extract domain entity names, user role names, lifecycle states, and business rules. These names must be used verbatim throughout the design — in model names, route paths, and component names.
-2. Read all Issues labelled `user-story` — understand API shapes, data-testid values, and slice boundaries
+2. Use the GitHub MCP tools to list all open issues in this repository labelled `user-story`
+   and read the full body of each one — understand API shapes, data-testid values, and slice boundaries
 3. Read existing `src/backend/prisma/schema.prisma` — understand what already exists (pre-built User model)
 4. Produce `docs/design/design-doc.md` in the format below
 5. Produce complete `src/backend/prisma/schema.prisma` including existing + new models
@@ -25,7 +26,7 @@ Read the BRD and user story Issues and produce two files:
 ```markdown
 # [App Name] — Design Document
 **Date:** [Today]
-**Source:** BRD.md + GitHub Issues
+**Source:** BRD.md + User Story Issues
 
 ## 1. Architecture Overview
 Describe the system tiers and how they connect.
@@ -46,6 +47,10 @@ Include data-testid values for all interactive elements.
 
 ## 5. Key Flows
 Mermaid sequence diagram for the primary user journey.
+
+## 6. Seed Data
+For each DATABASE issue, show a table of every seed record to be inserted.
+Include one table per model — list every row specified in the issue file.
 ```
 
 ## Prisma Schema Rules
@@ -64,12 +69,22 @@ Mermaid sequence diagram for the primary user journey.
 - RESTful conventions — nouns not verbs
 - Protected routes explicitly marked
 - Response shapes documented for complex responses
+- **Query params completeness** — for every endpoint that accepts optional query parameters
+  in the issue files, list all accepted query params in the request/response shape section
 - Error responses: `{ error: string }` with correct HTTP status
 
 ## Component Design Rules
 - Every interactive element must have a `data-testid` attribute
 - Document the data-testid value in the component tree
 - This is required for Playwright tests to work
+
+## Seed Data Rules
+- **Completeness** — every record specified in a DATABASE issue must appear in the seed plan
+  tables; do not omit rows — a missing record causes blank pages and Playwright test failures
+- Include one table per model; show every column that is populated by seed
+- Seed plan must span all slices — primary and extension DATABASE issues combined
+- At least one record of each status variant mentioned in the issue must be present
+  (e.g. if an issue says "at least one ACTIVE CLIPPED offer", the table must include that row)
 
 ## Mermaid Diagrams to Always Include
 1. Architecture overview — 3-tier diagram
