@@ -200,6 +200,9 @@ Seed data is required for:
 - Always include Assignment Order as first section after User Story
 - Always include Seed Data section — empty tables break frontend and tests
 - Never repeat models defined in other issues
+- When a FRONTEND issue describes status-conditional interactive elements
+  (e.g. a button that only appears when a record is in a specific state), include
+  at least one seed record in that state so the element is reachable in PLAYWRIGHT tests
 
 ---
 
@@ -287,6 +290,12 @@ Playwright tests will use these — list them explicitly:
 - Always include Assignment Order as first section after User Story
 - Always list data-testid values — playwright-agent reads these
 - List the API endpoints this UI calls
+- Every interactive element named in "What to Build" must have a corresponding
+  data-testid, even if it is status-conditional
+  (e.g. "a button that only appears for records in state X" → testid `{action}-button`).
+  If that element only appears when a record is in a specific state, the DATABASE
+  issue for that slice must seed at least one record in that state, and the
+  PLAYWRIGHT issue must include a step that exercises it.
 
 ---
 
@@ -363,6 +372,8 @@ For every file you write, verify:
 ✅ PLAYWRIGHT data-testid values match FRONTEND issues
 ✅ PLAYWRIGHT assertion types match FRONTEND behaviour — disabled ≠ absent ≠ label-change
 ✅ Every FRONTEND data-testid is referenced and exercised in a PLAYWRIGHT journey step
+✅ Every status-conditional interactive element named in "What to Build" has a data-testid,
+   the DATABASE seed covers the required state, and PLAYWRIGHT exercises it
 ✅ BACKEND extension routes that share a base path with a primary /:id route note registration order
 ✅ No content duplicated from copilot-instructions.md
 ✅ No content invented — everything derived from BRD or copilot-instructions
