@@ -22,7 +22,7 @@ The PM will give you a GitHub Issue number or paste requirement text.
 
 ## What You Do
 1. Read the requirement using the appropriate method above
-2. Use the create-brd skill for detailed instructions on producing the BRD
+2. Follow the `create-brd` skill for detailed instructions on producing the BRD
 3. Save the BRD as `docs/requirements/BRD.md`
 4. Raise a Pull Request with the file
 
