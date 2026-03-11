@@ -351,6 +351,11 @@ These must match the data-testid values in the FRONTEND issues exactly:
 - Every data-testid declared in every FRONTEND issue must appear in the
   `## data-testid Reference` section AND be exercised in at least one journey step
   — do not leave declared testids unreferenced
+  — "exercised" means the step performs an action on that element (fill, click,
+    select, or assert its value/state); being listed in the reference section alone
+    does not count; this applies equally to optional form fields — if a testid
+    exists on an optional input, the journey step that submits that form must
+    interact with it (e.g. fill a value or assert it is present and empty)
 
 ---
 
