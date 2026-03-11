@@ -37,7 +37,32 @@ Every issue must be:
 
 ---
 
-## Step 1 — Identify Functional Slices
+## Step 1 — Extract Domain Model from BRD
+
+Before grouping into slices, extract and record from the BRD:
+
+```
+DOMAIN ENTITIES   → become Prisma model names and component names
+                    Use exact BRD names — do not rename
+                    (e.g. BRD says "Offer" → model is Offer, component is OfferList)
+
+USER ROLE NAMES   → go into every "As a {role}..." user story
+                    Use exact BRD names — do not substitute generics
+                    (e.g. BRD says "Member" → user story says "As a Member...")
+
+LIFECYCLE STATES  → become acceptance criteria and seed data values
+                    (e.g. BRD says "Draft → Active → Expired" → AC must verify states)
+
+BUSINESS RULES    → become acceptance criteria
+                    (e.g. "discounts applied before purse deductions" → AC in both
+                    BACKEND and FRONTEND issues)
+```
+
+Write this extracted list as your working reference before writing any issue file.
+
+---
+
+## Step 2 — Identify Functional Slices
 
 Group the BRD functional requirements into workflow steps.
 Each workflow step that produces a demonstrable user outcome = one slice.
@@ -52,12 +77,12 @@ SLICE SIZING RULE:
   Extension slice → additional capability built on top — 3-5 FRs max
 ```
 
-Label slices using the actual domain language from the BRD.
+Label slices using the actual domain language from the BRD (from Step 1).
 Do not use generic names like "slice-1" or "feature-a".
 
 ---
 
-## Step 2 — Determine Files Per Slice
+## Step 3 — Determine Files Per Slice
 
 For each slice, only create role files where work is actually needed:
 
@@ -72,7 +97,7 @@ Use kebab-case slice names derived from the BRD domain language.
 
 ---
 
-## Step 3 — Calculate Assignment Order
+## Step 4 — Calculate Assignment Order
 
 Before writing any Issue file, calculate the assignment order for every Issue.
 This tells the facilitator exactly which Issue to assign to Copilot next.
@@ -120,7 +145,7 @@ For all other steps write the exact Issue title the facilitator must wait for.
 
 ---
 
-## Step 4 — Write Each File
+## Step 5 — Write Each File
 
 Add the `## Assignment Order` section as the FIRST section in every Issue file,
 immediately after the User Story. Facilitator sees it instantly when opening the Issue.
