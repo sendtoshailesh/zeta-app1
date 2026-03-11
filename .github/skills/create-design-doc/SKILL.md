@@ -10,14 +10,14 @@ description: Creates a technical design document and Prisma schema from a BRD an
 ## What You Do
 Read the BRD and user story Issues and produce two files:
 1. `docs/design/design-doc.md` — full technical design
-2. `src/prisma/schema.prisma` — complete data model
+2. `src/backend/prisma/schema.prisma` — complete data model
 
 ## Steps
-1. Read `docs/requirements/BRD.md`
-2. Read all Issues labelled `user-story`
-3. Read existing `src/prisma/schema.prisma` — understand what already exists
+1. Read `docs/requirements/BRD.md` — extract domain entity names, user role names, lifecycle states, and business rules. These names must be used verbatim throughout the design — in model names, route paths, and component names.
+2. Read all Issues labelled `user-story` — understand API shapes, data-testid values, and slice boundaries
+3. Read existing `src/backend/prisma/schema.prisma` — understand what already exists (pre-built User model)
 4. Produce `docs/design/design-doc.md` in the format below
-5. Produce complete `src/prisma/schema.prisma` including existing + new models
+5. Produce complete `src/backend/prisma/schema.prisma` including existing + new models
 6. Raise a PR with both files
 
 ## Design Doc Format
@@ -49,6 +49,9 @@ Mermaid sequence diagram for the primary user journey.
 ```
 
 ## Prisma Schema Rules
+- **Domain fidelity** — model names must match the BRD entity names exactly.
+  Use the name the BRD uses — do not substitute a generic equivalent
+  (e.g. if the BRD says `Appointment`, the model is `Appointment` — not `Booking` or `Event`)
 - Always include ALL models — existing and new
 - Mark pre-existing models with a comment: `// PRE-BUILT — do not modify`
 - New models added by this feature clearly labelled: `// NEW`
@@ -56,6 +59,8 @@ Mermaid sequence diagram for the primary user journey.
 - Run `npx prisma validate` mentally — check for missing relations
 
 ## API Design Rules
+- **Domain fidelity** — route path nouns must match BRD entity names
+  (e.g. if the BRD entity is `Appointment`, use `/api/appointments` — not `/api/bookings`)
 - RESTful conventions — nouns not verbs
 - Protected routes explicitly marked
 - Response shapes documented for complex responses
@@ -72,39 +77,46 @@ Mermaid sequence diagram for the primary user journey.
 3. Component tree — React hierarchy with data-testid values
 4. Sequence diagram — primary user journey end to end
 
-## Example (Add to Cart Feature)
+## Example — Structural Patterns to Follow
+
+This example illustrates the expected patterns for any domain.
+Replace `{PrimaryEntity}` and `{ActionEntity}` with the BRD's actual entity names.
 
 **New models to add:**
 ```prisma
 // NEW
-model Cart {
-  id        Int        @id @default(autoincrement())
-  userId    Int        @unique
-  user      User       @relation(fields: [userId], references: [id])
-  items     CartItem[]
-  createdAt DateTime   @default(now())
+model {PrimaryEntity} {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  status      String   @default("DRAFT") // lifecycle states from BRD
+  ownerId     Int
+  owner       User     @relation(fields: [ownerId], references: [id])
+  actions     {ActionEntity}[]
+  createdAt   DateTime @default(now())
 }
 
 // NEW
-model CartItem {
-  id         Int      @id @default(autoincrement())
-  cartId     Int
-  menuItemId Int
-  quantity   Int      @default(1)
-  cart       Cart     @relation(fields: [cartId], references: [id])
-  menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+model {ActionEntity} {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  {primaryId}     Int
+  performedAt     DateTime @default(now())
+  user            User              @relation(fields: [userId], references: [id])
+  {primaryEntity} {PrimaryEntity}   @relation(fields: [{primaryId}], references: [id])
+
+  @@unique([userId, {primaryId}])  // enforce business rule: one action per user per item
 }
 ```
 
-**Key API endpoints:**
-- GET /api/restaurants — list restaurants
-- GET /api/restaurants/:id/menu — get menu items
-- GET /api/cart — get user cart with items
-- POST /api/cart/items — add item
-- PUT /api/cart/items/:id — update quantity
-- DELETE /api/cart/items/:id — remove item
+**Key API endpoints pattern:**
+- GET  /api/{primary-entities} — list items for authenticated user
+- GET  /api/{primary-entities}/:id — get item details
+- POST /api/{action-entities} — perform action (`{ {primaryId} }`)
+- DELETE /api/{action-entities}/:id — reverse action
+- GET  /api/{action-entities} — list user's performed actions
 
-**data-testid values:**
-- `cart-icon`, `cart-count`, `cart-drawer`
-- `cart-item`, `remove-item-button`
-- `add-to-cart-button`, `menu-item-card`
+**data-testid pattern:**
+- `{entity}-list`, `{entity}-card`, `{entity}-title`
+- `{action}-button`, `un{action}-button`
+- `{action}ed-list`, `{action}ed-item`
