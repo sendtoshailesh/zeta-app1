@@ -24,8 +24,10 @@ or feature set from the repository name under any circumstances.
 
 ## Steps
 1. Read the requirement in full before writing anything.
-   If given an Issue number, fetch the Issue body using the GitHub MCP tool.
-   If given pasted text, use that. If neither is available, ask for the text.
+   If given an Issue number, read the Issue body using the available GitHub tools.
+   If given pasted text, use that verbatim.
+   If given a file path, read it using the available file tools.
+   If you cannot access the Issue, ask the PM to paste the body — do not guess.
 2. Extract the domain model — list every named entity, its states/lifecycle, and the actions users perform on it
 3. Identify user roles — use the exact role names from the requirement; do not invent generic substitutes
 4. Identify functional requirements — derive them from the domain model and named user actions
