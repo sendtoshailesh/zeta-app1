@@ -16,8 +16,16 @@ rename them to generic equivalents (e.g. if the requirement says `Booking`,
 use `Booking` — not `Reservation` or `Request`).
 Do not ask clarifying questions — make reasonable assumptions and document them.
 
+## Source Rule
+The requirement text is your only authoritative source — use it verbatim.
+Do not simplify, reframe, or substitute it.
+**The repository name is not a requirement.** Do not infer the domain, entities,
+or feature set from the repository name under any circumstances.
+
 ## Steps
-1. Read the requirement text or GitHub Issue provided in full before writing anything
+1. Read the requirement in full before writing anything.
+   If given an Issue number, fetch the Issue body using the GitHub MCP tool.
+   If given pasted text, use that. If neither is available, ask for the text.
 2. Extract the domain model — list every named entity, its states/lifecycle, and the actions users perform on it
 3. Identify user roles — use the exact role names from the requirement; do not invent generic substitutes
 4. Identify functional requirements — derive them from the domain model and named user actions
