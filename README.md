@@ -22,27 +22,40 @@ Everything is built during the workshop. Nothing is pre-built except auth.
 
 ## Before You Arrive — Prerequisites
 
-Install these before the workshop day:
+### Tools — Install these before the workshop day
 
 | Tool | Version | Check |
 |------|---------|-------|
 | Node.js | 18 or higher | `node --version` |
 | Git | Any recent | `git --version` |
 | VS Code | Latest | — |
-| GitHub Copilot | Active licence | — |
 
-> ⚠️ You must have an active GitHub Copilot licence to use the agents.
-> Check with your facilitator if you are unsure.
+### GitHub Access — Required
+
+| Requirement | Details |
+|-------------|---------|
+| GitHub Enterprise account | Your organisation's GitHub Enterprise instance |
+| GitHub Copilot Enterprise licence | Required to use the Agents tab and coding agent |
+| Collaborator access to cohort repo | Your facilitator adds you before the workshop |
+
+> ⚠️ **Confirm with your IT or admin team before the workshop day:**
+> Copilot coding agent must be enabled for your account at the
+> organisation or enterprise level. Having a Copilot licence alone
+> is not sufficient — your admin must explicitly enable coding agent.
+> If the **Agents tab** is not visible in your repo on the workshop day,
+> contact your IT or admin team — not your facilitator.
 
 ---
 
 ## Setup — Do This Before the Workshop Starts
 
-### 1. Clone the repo
+### 1. Clone the cohort repo
+
+Your facilitator will share the cohort repo URL before the workshop.
 
 ```bash
-git clone https://github.com/umaranit/agentic-workshop-template.git
-cd agentic-workshop-template
+git clone https://[your-enterprise]/[your-org]/[AppName].git
+cd [AppName]
 ```
 
 ### 2. Install dependencies
@@ -67,7 +80,7 @@ cp src/frontend/.env.example src/frontend/.env
 
 Open `src/frontend/.env` and set the app name your facilitator gives you:
 ```
-VITE_APP_NAME="BookIt"
+VITE_APP_NAME="[AppName]"
 ```
 
 ### 4. Set up the database
@@ -121,17 +134,17 @@ See `workshop/workshop-flow.md` for exactly what your role does during the works
 
 ## Where Agents Live
 
-All agents are on GitHub — not in VS Code.
+All agents are on your GitHub Enterprise instance — not in VS Code.
 
 ```
-github.com → your repo → Agents tab → New session → agent dropdown
+[your-enterprise] → your repo → Agents tab → New session → agent dropdown
 ```
 
 You will find: `brd-agent`, `user-story-agent`, `design-agent`,
 `unit-test-agent`, `playwright-agent`
 
-> The **Agents tab** is visible only if Copilot coding agent is enabled
-> for the repo. Ask your facilitator if you cannot see it.
+> If the **Agents tab** is not visible — coding agent is not enabled
+> for your account. Contact your IT or admin team, not your facilitator.
 
 ---
 
