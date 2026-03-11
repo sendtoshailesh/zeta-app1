@@ -44,18 +44,19 @@ Before grouping into slices, extract and record from the BRD:
 ```
 DOMAIN ENTITIES   → become Prisma model names and component names
                     Use exact BRD names — do not rename
-                    (e.g. BRD says "Offer" → model is Offer, component is OfferList)
+                    (e.g. BRD says "{EntityName}" → model is {EntityName},
+                    component is {EntityName}List)
 
 USER ROLE NAMES   → go into every "As a {role}..." user story
                     Use exact BRD names — do not substitute generics
-                    (e.g. BRD says "Member" → user story says "As a Member...")
+                    (e.g. BRD says "{RoleName}" → user story says "As a {RoleName}...")
 
 LIFECYCLE STATES  → become acceptance criteria and seed data values
-                    (e.g. BRD says "Draft → Active → Expired" → AC must verify states)
+                    (e.g. BRD says "{State1} → {State2} → {State3}"
+                    → AC must verify each state transition)
 
 BUSINESS RULES    → become acceptance criteria
-                    (e.g. "discounts applied before purse deductions" → AC in both
-                    BACKEND and FRONTEND issues)
+                    (e.g. BRD says "{Rule}" → AC in both BACKEND and FRONTEND issues)
 ```
 
 Write this extracted list as your working reference before writing any issue file.
