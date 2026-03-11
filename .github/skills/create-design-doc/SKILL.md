@@ -57,6 +57,12 @@ Include one table per model — list every row specified in the issue file.
 - **Domain fidelity** — model names must match the BRD entity names exactly.
   Use the name the BRD uses — do not substitute a generic equivalent
   (e.g. if the BRD says `Appointment`, the model is `Appointment` — not `Booking` or `Event`)
+- **Enums** — every categorical field with a fixed set of values (offer types, lifecycle states,
+  discount models, etc.) must be defined as a Prisma `enum` type, not `String`.
+  Define each enum above the model that first uses it, clearly labelled `// NEW`.
+  Never use `String // VALUE1 | VALUE2` — always use a proper `enum` declaration.
+  Prisma enums ARE supported with SQLite — Prisma maps them to strings internally.
+  A tooling validation error does not mean enums should be downgraded to String.
 - Always include ALL models — existing and new
 - Mark pre-existing models with a comment: `// PRE-BUILT — do not modify`
 - New models added by this feature clearly labelled: `// NEW`
@@ -99,16 +105,23 @@ Replace `{PrimaryEntity}` and `{ActionEntity}` with the BRD's actual entity name
 
 **New models to add:**
 ```prisma
+// NEW — define enums for all categorical fields before the models that use them
+enum {PrimaryEntityStatus} {
+  DRAFT
+  ACTIVE
+  // ... all states from the BRD lifecycle
+}
+
 // NEW
 model {PrimaryEntity} {
-  id          Int      @id @default(autoincrement())
+  id          Int                    @id @default(autoincrement())
   title       String
   description String
-  status      String   @default("DRAFT") // lifecycle states from BRD
+  status      {PrimaryEntityStatus}  @default(DRAFT)
   ownerId     Int
-  owner       User     @relation(fields: [ownerId], references: [id])
+  owner       User                   @relation(fields: [ownerId], references: [id])
   actions     {ActionEntity}[]
-  createdAt   DateTime @default(now())
+  createdAt   DateTime               @default(now())
 }
 
 // NEW
