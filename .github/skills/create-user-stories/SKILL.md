@@ -329,6 +329,12 @@ These must match the data-testid values in the FRONTEND issues exactly:
 - Always last in assignment order — needs all DATABASE, BACKEND, FRONTEND merged
 - data-testid values must match FRONTEND issues exactly
 - Test credentials come from copilot-instructions.md — never hardcode
+- Assertion type must match the FRONTEND behaviour description — do not invent:
+  - FRONTEND says button is **disabled** when action is not permitted → assert `toBeDisabled()`, not absent
+  - FRONTEND says element is **not rendered** in a given state → assert `not.toBeVisible()`
+  - FRONTEND says element **changes text or label** after an action → assert the new text
+- Before writing the PLAYWRIGHT file, re-read every FRONTEND issue and note
+  each conditional UI behaviour explicitly — then mirror it in the assertion
 
 ---
 
@@ -348,6 +354,7 @@ For every file you write, verify:
 ✅ 2-4 acceptance criteria max — not a laundry list
 ✅ FRONTEND issues list all data-testid values
 ✅ PLAYWRIGHT data-testid values match FRONTEND issues
+✅ PLAYWRIGHT assertion types match FRONTEND behaviour — disabled ≠ absent ≠ label-change
 ✅ No content duplicated from copilot-instructions.md
 ✅ No content invented — everything derived from BRD or copilot-instructions
 ```
