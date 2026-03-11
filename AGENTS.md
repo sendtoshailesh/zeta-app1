@@ -23,10 +23,29 @@ Read these files first — in this order:
 ### [DATABASE] Issues — Architect assigns
 You are responsible for:
 - Adding new domain models to `src/backend/prisma/schema.prisma`
-- Running `npx prisma migrate dev --name {descriptive-name}`
-- Running `npx prisma generate`
+- Running `npm run db:migrate` (from `src/backend/`) to create the migration
+- Running `npm run db:generate` (from `src/backend/`) to regenerate the client
 - Adding domain seed data to `src/backend/prisma/seed.ts` as specified in the Issue
-- Running `npx prisma db seed` after adding seed data
+- Running `npm run db:seed` (from `src/backend/`) after adding seed data
+
+**Enums are mandatory — never use String for categorical fields.**
+If the Issue specifies `Enum (VALUE1, VALUE2, ...)` for a field, you MUST declare
+a proper Prisma `enum` type — never use `String` or `String // VALUE1 | VALUE2`.
+Prisma enums ARE supported with SQLite. Define each enum above the model that uses it.
+Example:
+```prisma
+enum OfferStatus {
+  DRAFT
+  ACTIVE
+  SUSPENDED
+}
+
+model Offer {
+  status OfferStatus @default(DRAFT)
+}
+```
+If a migration or generate command fails with a version error, use the `npm run db:*`
+scripts — they use the local Prisma version in node_modules, not any global binary.
 
 **Seed data is mandatory — never skip it.**
 The [DATABASE] Issue specifies what sample records to create.
