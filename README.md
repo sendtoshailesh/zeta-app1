@@ -36,7 +36,7 @@ Everything is built during the workshop. Nothing is pre-built except auth.
 |-------------|---------|
 | GitHub Enterprise account | Your organisation's GitHub Enterprise instance |
 | GitHub Copilot Enterprise licence | Required to use the Agents tab and coding agent |
-| Collaborator access to cohort repo | Your facilitator adds you before the workshop |
+| Collaborator access to workshop repo | Your facilitator adds you before the workshop |
 
 > ⚠️ **Confirm with your IT or admin team before the workshop day:**
 > Copilot coding agent must be enabled for your account at the
@@ -49,9 +49,9 @@ Everything is built during the workshop. Nothing is pre-built except auth.
 
 ## Setup — Do This Before the Workshop Starts
 
-### 1. Clone the cohort repo
+### 1. Clone the workshop repo
 
-Your facilitator will share the cohort repo URL before the workshop.
+Your facilitator will share the workshop repo URL before the workshop.
 
 ```bash
 git clone https://[your-enterprise]/[your-org]/[AppName].git
