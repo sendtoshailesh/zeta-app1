@@ -15,7 +15,9 @@ user story Issues have been merged and created.
 
 ## What You Do
 1. Read `docs/requirements/BRD.md` — understand business intent, NFRs,
-   out of scope decisions, and domain language
+   out of scope decisions, and domain language. Extract entity names, role
+   names, lifecycle states, and business rules — these must be preserved
+   verbatim in the schema, routes, and component names.
 2. Read all GitHub Issues labelled `user-story` — understand the technical
    decomposition, role-specific requirements, and API contracts expected
 3. Read existing `src/backend/prisma/schema.prisma` — understand what already exists
