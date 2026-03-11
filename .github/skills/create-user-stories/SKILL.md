@@ -238,6 +238,10 @@ This issue adds only the endpoints required for this slice.
 - Always include Assignment Order as first section after User Story
 - Always specify HTTP method, path, request and response shape
 - Always include 401 criterion for protected endpoints
+- Avoid route shadowing across slices — if an extension slice adds a static
+  sub-path under the same base as a primary-slice parameterised route
+  (e.g. `/api/things/summary` alongside `/api/things/:id`), note in the
+  Context section: "Register this router **before** the `/:id` route in index.ts"
 
 ---
 
@@ -335,6 +339,9 @@ These must match the data-testid values in the FRONTEND issues exactly:
   - FRONTEND says element **changes text or label** after an action → assert the new text
 - Before writing the PLAYWRIGHT file, re-read every FRONTEND issue and note
   each conditional UI behaviour explicitly — then mirror it in the assertion
+- Every data-testid declared in every FRONTEND issue must appear in the
+  `## data-testid Reference` section AND be exercised in at least one journey step
+  — do not leave declared testids unreferenced
 
 ---
 
@@ -355,6 +362,8 @@ For every file you write, verify:
 ✅ FRONTEND issues list all data-testid values
 ✅ PLAYWRIGHT data-testid values match FRONTEND issues
 ✅ PLAYWRIGHT assertion types match FRONTEND behaviour — disabled ≠ absent ≠ label-change
+✅ Every FRONTEND data-testid is referenced and exercised in a PLAYWRIGHT journey step
+✅ BACKEND extension routes that share a base path with a primary /:id route note registration order
 ✅ No content duplicated from copilot-instructions.md
 ✅ No content invented — everything derived from BRD or copilot-instructions
 ```
