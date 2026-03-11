@@ -55,6 +55,7 @@ You go first. No one can start until you finish.
 Go to the **Agents tab** → New session → select **brd-agent** and type:
 ```
 Create a BRD from Issue #1
+Note: Create a BRD from Issue #1  -- Note issue number could be different in your case. Enter appropriate number
 ```
 
 Wait for the agent to raise a PR with `docs/requirements/BRD.md`
