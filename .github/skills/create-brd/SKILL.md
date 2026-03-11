@@ -8,18 +8,24 @@ description: Creates a Business Requirements Document from a requirement Issue o
 # Skill — Create BRD
 
 ## What You Do
-Read the requirement and produce a complete Business Requirements Document.
+Read the requirement and produce a complete BRD that is **faithful to the
+domain model, entities, and terminology in the source requirement**.
+Do not substitute your own interpretation for the domain the requirement defines.
+If the requirement names specific entities, use those exact names — do not
+rename them to generic equivalents (e.g. if the requirement says `Booking`,
+use `Booking` — not `Reservation` or `Request`).
 Do not ask clarifying questions — make reasonable assumptions and document them.
 
 ## Steps
-1. Read the requirement text or GitHub Issue provided
-2. Identify functional requirements — what the system must do
-3. Identify non-functional requirements — if not stated, apply sensible defaults
-4. Identify user roles — who uses the system
-5. Define scope — what is in and what is out
-6. Document assumptions — where requirement was unclear
-7. Produce the BRD in the format below
-8. Save as `docs/requirements/BRD.md`
+1. Read the requirement text or GitHub Issue provided in full before writing anything
+2. Extract the domain model — list every named entity, its states/lifecycle, and the actions users perform on it
+3. Identify user roles — use the exact role names from the requirement; do not invent generic substitutes
+4. Identify functional requirements — derive them from the domain model and named user actions
+5. Identify non-functional requirements — if not stated, apply sensible defaults
+6. Define scope — what is in and what is out, using the requirement's own framing
+7. Document assumptions — where the requirement was unclear and what was assumed
+8. Produce the BRD in the format below
+9. Save as `docs/requirements/BRD.md`
 
 ## BRD Format
 
@@ -61,12 +67,31 @@ One paragraph describing what the application does.
 - [Assumption 2]
 ```
 
-## Functional Requirements to Always Check
-For any application, check whether the requirement implies:
-- User authentication — if users are mentioned, auth is likely needed
-- Core entity management — what are the main things the app manages
-- CRUD operations — create, read, update, delete on those entities
-- User roles and permissions — who can do what
+## Functional Requirements — How to Extract Them
+1. **Use the requirement's own domain model** — identify the named entities,
+   their states/lifecycles, and the actions users perform on them.
+2. **Preserve lifecycle states verbatim** — if the requirement defines states
+   (e.g. `Pending → Approved → Completed`), reproduce them exactly as requirements.
+3. **Preserve business rules verbatim** — if the requirement defines explicit rules
+   (e.g. "manager approval required before scheduling"), capture them as FRs.
+4. **Use the requirement's role names** — do not invent generic substitutes.
+   If the requirement names specific roles, use those — not generic replacements
+   like "User" or "Admin" unless the requirement itself uses those terms.
+5. Only after extracting domain-specific requirements, check if generic concerns apply:
+   - Is authentication implied? (if users are mentioned, likely yes)
+   - Are there CRUD operations on the domain entities?
+   - Are there role-based access controls?
+
+## Do Not Do This
+- Do NOT rename domain entities to generic equivalents
+  (e.g. if the requirement says `Booking`, do not write `Reservation`;
+  if it says `Practitioner`, do not write `User` or `Doctor`)
+- Do NOT reduce a complex domain to a simple catalogue + form pattern
+  unless the requirement actually describes that
+- Do NOT invent a simpler domain model because the requirement is complex —
+  complexity in the requirement must be reflected in the BRD
+- Do NOT discard explicit lifecycle states or business rules as "out of scope"
+  unless the requirement itself says so
 
 ## Non-Functional Requirement Defaults
 Apply these if the requirement does not state otherwise:
@@ -74,7 +99,28 @@ Apply these if the requirement does not state otherwise:
 - Performance: Page load under 3 seconds
 - Usability: Responsive design for desktop and mobile
 
-## Example (Food Ordering App)
+## Examples
+
+### Example 1 — Domain Preservation Principle
+
+If the requirement says:
+> "Patients book Appointments with Practitioners. Each Appointment moves through
+> states: Scheduled → Confirmed → Completed or Cancelled.
+> A Referral is required before a specialist Appointment can be Confirmed."
+
+The BRD MUST:
+- Name entities as: `Patient`, `Practitioner`, `Appointment`, `Referral`
+- Name roles as: `Patient`, `Practitioner` (not "User" and "Doctor")
+- Include FR: Patient books/cancels an Appointment
+- Include FR: Appointment lifecycle: Scheduled → Confirmed → Completed or Cancelled
+- Include business rule as FR: Referral required before specialist Appointment is Confirmed
+
+The BRD must NOT say:
+- Entities: `User`, `Booking`, `Request`
+- Roles: `User`, `Admin`
+- Lifecycle reduced to: `Active` / `Closed`
+
+### Example 2 — Simple Catalogue App
 
 Requirement:
 > "We want to build an online food ordering platform. Customers browse
