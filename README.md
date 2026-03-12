@@ -116,6 +116,41 @@ This is correct — the feature is built during the workshop.
 
 ---
 
+## After Merging Agent PRs — Run This Every Time
+
+Each time the coding agent raises a PR and you merge it, run these steps
+before starting the app. Skipping them causes TypeScript errors or a blank/broken UI.
+
+```bash
+cd src/backend
+
+# 1. Install any new packages the agent added to package.json
+npm install
+
+# 2. Apply any new database migrations (new tables, columns)
+npm run db:migrate
+
+# 3. Regenerate the Prisma client to match the updated schema
+npm run db:generate
+
+# 4. Load seed data so the UI shows real records (not a blank page)
+npm run db:seed
+```
+
+> **Why is this needed?**
+> The coding agent adds new npm packages, Prisma models, and seed data as part of
+> its implementation. When you pull those changes locally, the Prisma client is
+> out of date and the database tables don't exist yet — these four commands bring
+> your local environment in sync with what the agent built.
+
+Then start (or restart) the backend:
+
+```bash
+npm run dev
+```
+
+---
+
 ## Your Role
 
 Your facilitator will assign you one of these roles:
