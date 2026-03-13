@@ -40,6 +40,11 @@ jobs:
           gh label create "database"    --color "#6f42c1" --description "Database / schema work" --force
           gh label create "playwright"  --color "#00b388" --description "E2E Playwright tests" --force
 
+          # Pre-create step labels step-01 through step-30
+          for i in $(seq -w 1 30); do
+            gh label create "step-$i" --color "#f9d0c4" --description "Assignment order step $i" --force
+          done
+
       - name: Create GitHub Issues from markdown files
         env:
           GH_TOKEN: ${{ secrets.PAT_TOKEN }}
@@ -87,11 +92,24 @@ jobs:
 
             echo "Label: $LABEL"
 
-            gh issue create \
-              --title "$TITLE" \
-              --body-file "$FILE" \
-              --label "$LABEL" \
-              --label "user-story"
+            # Extract step number from "Step N of M" in Assignment Order section
+            STEP_NUM=$(grep -m1 '^Step [0-9]' "$FILE" | grep -oE '^Step [0-9]+' | grep -oE '[0-9]+' || true)
+            if [ -n "$STEP_NUM" ]; then
+              STEP_LABEL=$(printf "step-%02d" "$STEP_NUM")
+              echo "Step label: $STEP_LABEL"
+              gh issue create \
+                --title "$TITLE" \
+                --body-file "$FILE" \
+                --label "$LABEL" \
+                --label "user-story" \
+                --label "$STEP_LABEL"
+            else
+              gh issue create \
+                --title "$TITLE" \
+                --body-file "$FILE" \
+                --label "$LABEL" \
+                --label "user-story"
+            fi
 
             echo "Created: $TITLE"
           done
