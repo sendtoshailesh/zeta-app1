@@ -54,8 +54,7 @@ You go first. No one can start until you finish.
 
 Go to the **Agents tab** → New session → select **brd-agent** and type:
 ```
-Create a BRD from Issue #1
-Note: Create a BRD from Issue #1  -- Note issue number could be different in your case. Enter appropriate number
+Create a BRD from Issue #1  -- Note issue number could be different in your case. Enter appropriate number
 ```
 
 Wait for the agent to raise a PR with `docs/requirements/BRD.md`
@@ -134,11 +133,18 @@ Issues tab → open [DATABASE] Issue → Assignees → select Copilot
 
 Wait for PR with updated schema, migration files, and seed data.
 
-**Review — check these things:**
+**Optional — use review-agent to check the PR automatically:**
+```
+Agents tab → New session → review-agent → "Review the PR for Issue #N"
+```
+The review-agent will post a structured pass/fail checklist as a PR review comment.
+
+**If reviewing manually, check these things:**
 - Migration runs without errors (check the PR description)
 - `seed.ts` has at least 3 realistic sample records for domain tables
 - The pre-built `User` model and test user seed are unchanged
 - No frontend or backend route files were modified
+- All categorical fields (status, type) use Prisma `enum` — not `String`
 
 **Merge → then assign the next DATABASE Issue (if any) following Assignment Order.**
 
@@ -166,12 +172,19 @@ Issues tab → open [BACKEND] Issue → Assignees → select Copilot
 
 Wait for PR with new files in `src/backend/routes/` and `src/backend/controllers/`
 
-**Review — check these things:**
+**Optional — use review-agent to check the PR automatically:**
+```
+Agents tab → New session → review-agent → "Review the PR for Issue #N"
+```
+The review-agent will post a structured pass/fail checklist as a PR review comment.
+
+**If reviewing manually, check these things:**
 - All endpoints listed in the Issue are implemented
 - Every protected endpoint uses the auth middleware
 - Business rules are enforced (e.g. double booking check, capacity limit)
 - No frontend files were modified
 - Response shapes match what the Issue specifies
+- No `any` types used in TypeScript
 
 **Merge → then assign the next BACKEND Issue (if any) following Assignment Order.**
 
@@ -216,11 +229,18 @@ Issues tab → open [FRONTEND] Issue → Assignees → select Copilot
 
 Wait for PR with new pages and components in `src/frontend/src/`
 
-**Review — check these things:**
+**Optional — use review-agent to check the PR automatically:**
+```
+Agents tab → New session → review-agent → "Review the PR for Issue #N"
+```
+The review-agent will post a structured pass/fail checklist as a PR review comment.
+
+**If reviewing manually, check these things:**
 - The HomePage no longer shows "Features coming soon"
 - Every `data-testid` value listed in the Issue is present on the correct element
 - The UI calls the correct API endpoints (check the Issue for endpoint paths)
 - No backend files were modified
+- No `any` types used in TypeScript
 
 **Merge → then assign the next FRONTEND Issue (if any) following Assignment Order.**
 
