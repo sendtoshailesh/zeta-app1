@@ -175,6 +175,11 @@ For all other steps write the exact Issue title the facilitator must wait for.
 Add the `## Assignment Order` section as the FIRST section in every Issue file,
 immediately after the User Story. Facilitator sees it instantly when opening the Issue.
 
+> **Label note:** The GitHub Actions workflow reads the first line of `## Assignment Order`
+> and applies a `step-NN` label automatically (e.g. `step-01`, `step-05`).
+> The line **must** start with `Step N` — no leading spaces or extra characters.
+> This makes the assignment order visible in the issue list without opening any issue.
+
 ### DATABASE issue format
 
 ```
