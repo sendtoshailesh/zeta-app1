@@ -8,14 +8,14 @@ When you finish your steps — wait for the next role to complete theirs before 
 ## The Pipeline
 
 ```
-PM → brd-agent → user-story-agent → Issues created
-                                         ↓
+PM → brd-agent → user-story-agent → plan-agent → Issues + Plan ready
+                                                        ↓
 Architect → design-agent → assign DATABASE Issues to Copilot
-                                         ↓
+                                                        ↓
 Backend Dev → assign BACKEND Issues to Copilot → unit-test-agent
-                                         ↓
+                                                        ↓
 UI Dev → assign FRONTEND Issues to Copilot
-                                         ↓
+                                                        ↓
 QA → playwright-agent → run tests
 ```
 
@@ -90,7 +90,29 @@ Wait for the agent to raise a PR with files in the `issues/` folder.
 > After you merge, GitHub Actions automatically creates the Issues with labels.
 > Check the **Issues tab** — you should see all issues appear within 1-2 minutes.
 
-**Hand off to Architect** — tell them Issues are ready.
+**Hand off to next step** — do not hand off to Architect yet.
+
+---
+
+### Step 3 — Create Sprint Plan
+
+Go to the **Agents tab** → New session → select **plan-agent** and type:
+```
+Create a sprint plan from the BRD and Issues
+```
+
+Wait for the agent to raise a PR with `docs/requirements/plan.md`
+
+**Review — check these things:**
+- Every Issue file in the `issues/` folder appears in the sprint table
+- Sprint 1 = primary slice only (not all issues at once)
+- DATABASE steps come before BACKEND, which come before FRONTEND — within every sprint
+- Every BRD Functional Requirement (FR-001 etc.) appears in the Traceability table
+- The Risk Register has at least 3 risks with mitigations
+
+**Merge when satisfied.**
+
+**Hand off to Architect** — tell them Issues and plan are ready.
 
 ---
 
