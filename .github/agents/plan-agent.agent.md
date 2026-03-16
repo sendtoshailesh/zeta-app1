@@ -18,8 +18,8 @@ have been merged and all Issues are visible in the Issues tab.
    tech stack, what is pre-built, and implementation constraints
 2. Read `docs/requirements/BRD.md` — understand the feature scope, FRs,
    NFRs, out-of-scope decisions, and business rules
-3. Read all files in the `issues/` folder — understand the technical
-   decomposition, slice boundaries, and assignment order
+3. Read all GitHub Issues labelled `user-story` using the GitHub MCP tools —
+   understand the technical decomposition, slice boundaries, and assignment order
 4. Follow the `create-plan` skill for detailed instructions on
    producing the sprint plan document
 5. Save the plan as `docs/requirements/plan.md`

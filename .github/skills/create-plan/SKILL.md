@@ -22,9 +22,9 @@ Read these sources first — everything in the plan derives from them:
    - Out of scope items
    - Business rules and domain language
 
-3. All files in `issues/`
-   - Issue type per file: DATABASE / BACKEND / FRONTEND / PLAYWRIGHT
-   - `## Assignment Order` section in each file (Step N of M)
+3. All GitHub Issues labelled `user-story` — fetch using GitHub MCP tools
+   - Issue type: DATABASE / BACKEND / FRONTEND / PLAYWRIGHT (from issue title or label)
+   - `## Assignment Order` section in the issue body (Step N of M)
    - Slice names (primary and extension)
    - Acceptance criteria per issue
 
@@ -32,10 +32,10 @@ Read these sources first — everything in the plan derives from them:
 
 ## Step 1 — Extract the Work Inventory
 
-Before writing the plan, build this internal table from the Issues:
+Before writing the plan, build this internal table from the GitHub Issues:
 
 ```
-| File name | Slice | Type | Assignment Step | Effort (S/M/L) | Depends on |
+| Issue # | Title | Slice | Type | Assignment Step | Effort (S/M/L) | Depends on |
 ```
 
 **Effort sizing rules (relative — never use hours or points):**
