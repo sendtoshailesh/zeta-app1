@@ -351,4 +351,4 @@ npx playwright test --ui
 Email:    test@example.com
 Password: password123
 ```
-- If still failing — run `cd src/backend && npx prisma db seed`
+- If still failing — run `cd src/backend && npm run db:seed`

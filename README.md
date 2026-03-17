@@ -87,8 +87,8 @@ VITE_APP_NAME="[AppName]"
 
 ```bash
 cd src/backend
-npx prisma migrate dev --name init
-npx prisma db seed
+npm run db:migrate   # never: npx prisma migrate dev
+npm run db:seed      # never: npx prisma db seed
 ```
 
 ### 5. Start the app
