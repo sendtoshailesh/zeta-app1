@@ -94,6 +94,12 @@ Always implement in this order to avoid dependency failures:
 - Do not merge your own PR — leave for human review
 
 ## Run Commands
+
+> **WARNING — Never use `npx prisma ...` for database commands.**
+> `npx` fetches the latest Prisma version from npm (currently v7+), which is incompatible
+> with this project's Prisma v5 setup and will fail with "No seed command configured".
+> Always use the `npm run db:*` scripts below — they use the local version in `node_modules`.
+
 ```bash
 # Backend
 cd src/backend && npm run dev
@@ -104,9 +110,9 @@ cd src/frontend && npm run dev
 # Database — always run from src/backend/ using npm scripts
 # This ensures the LOCAL Prisma version (^5.0.0) is used, not any globally installed version
 cd src/backend
-npm run db:migrate   # runs: prisma migrate dev
-npm run db:generate  # runs: prisma generate
-npm run db:seed      # runs: ts-node prisma/seed.ts
+npm run db:migrate   # ✅ DO THIS — never: npx prisma migrate dev
+npm run db:generate  # ✅ DO THIS — never: npx prisma generate
+npm run db:seed      # ✅ DO THIS — never: npx prisma db seed
 
 # Tests
 npm run test
