@@ -14,6 +14,208 @@ model User {
   password  String
   name      String
   createdAt DateTime @default(now())
+  clips     Clip[]
 }
 
-// All domain models are added during the workshop by agents
+// NEW — Offer lifecycle states
+enum OfferStatus {
+  DRAFT
+  CONFIGURED
+  ACTIVE
+  SUSPENDED
+  EXPIRED
+  ARCHIVED
+}
+
+// NEW — Discount model types
+enum OfferType {
+  AMOUNT_OFF
+  PERCENTAGE_OFF
+  FIXED_PRICE
+  TIERED
+  CAPPED
+}
+
+// NEW — How the offer was created
+enum OfferSource {
+  MANUAL
+  INGESTED
+}
+
+// NEW
+model Sponsor {
+  id                 String   @id @default(cuid())
+  name               String
+  branding           String?
+  reportingPartition String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  offers             Offer[]
+  purses             Purse[]
+}
+
+// NEW
+model Offer {
+  id               String            @id @default(cuid())
+  name             String
+  description      String
+  brand            String?
+  offerType        OfferType
+  discountValue    Float
+  status           OfferStatus       @default(DRAFT)
+  source           OfferSource       @default(MANUAL)
+  syndicatorRef    String?
+  sponsorId        String
+  effectiveDate    DateTime
+  expirationDate   DateTime?
+  depletionLimit   Int?
+  channels         String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  sponsor          Sponsor           @relation(fields: [sponsorId], references: [id])
+  clips            Clip[]
+  syndicatorEvents SyndicatorEvent[]
+}
+
+// NEW — Rule eligibility categories
+enum RuleType {
+  PRODUCT_CATEGORY
+  MERCHANT_LOCATION
+  MEMBER_ATTRIBUTE
+  PURSE_MAPPING
+  PRIORITY
+}
+
+// NEW
+model Rule {
+  id           String    @id @default(cuid())
+  name         String
+  description  String?
+  ruleType     RuleType
+  criteria     String
+  version      Int       @default(1)
+  parentRuleId String?
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  parentRule   Rule?     @relation("RuleVersions", fields: [parentRuleId], references: [id])
+  childRules   Rule[]    @relation("RuleVersions")
+}
+
+// NEW — Purse types
+enum PurseType {
+  STANDARD
+  PERKS_ONLY
+}
+
+// NEW
+model Purse {
+  id                       String    @id @default(cuid())
+  name                     String
+  purseType                PurseType
+  productCategories        String?
+  sponsorId                String
+  maxDiscountPerTransaction Float?
+  maxDiscountPerDay        Float?
+  isActive                 Boolean   @default(true)
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+  sponsor                  Sponsor   @relation(fields: [sponsorId], references: [id])
+}
+
+// NEW — Syndicator event types
+enum SyndicatorEventType {
+  CLIP
+  UNCLIP
+  DEPLETION
+  REDEMPTION
+}
+
+// NEW — Syndicator event delivery statuses
+enum SyndicatorEventStatus {
+  PENDING
+  SENT
+  ACKNOWLEDGED
+  FAILED
+  RETRYING
+}
+
+// NEW
+model Syndicator {
+  id              String            @id @default(cuid())
+  name            String
+  webhookUrl      String?
+  clipSlaSeconds  Int               @default(30)
+  isActive        Boolean           @default(true)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  events          SyndicatorEvent[]
+}
+
+// NEW
+model SyndicatorEvent {
+  id               String                @id @default(cuid())
+  syndicatorId     String
+  offerId          String
+  eventType        SyndicatorEventType
+  status           SyndicatorEventStatus @default(PENDING)
+  payload          String?
+  providerResponse String?
+  retryCount       Int                   @default(0)
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  syndicator       Syndicator            @relation(fields: [syndicatorId], references: [id])
+  offer            Offer                 @relation(fields: [offerId], references: [id])
+}
+
+// NEW — Clip lifecycle states
+enum ClipStatus {
+  ACTIVE
+  UNCLIPPED
+  EXHAUSTED
+  EXPIRED
+}
+
+// NEW
+model Clip {
+  id               String     @id @default(cuid())
+  userId           Int
+  offerId          String
+  status           ClipStatus @default(ACTIVE)
+  redemptionCount  Int        @default(0)
+  maxRedemptions   Int?
+  clippedAt        DateTime   @default(now())
+  unclippedAt      DateTime?
+  updatedAt        DateTime   @updatedAt
+  user             User       @relation(fields: [userId], references: [id])
+  offer            Offer      @relation(fields: [offerId], references: [id])
+
+  @@unique([userId, offerId])
+}
+
+// NEW — Audit action types
+enum AuditAction {
+  OFFER_CREATED
+  OFFER_UPDATED
+  OFFER_STATE_CHANGED
+  RULE_CREATED
+  RULE_UPDATED
+  CLIP_CREATED
+  CLIP_UNCLIPPED
+  REDEMPTION_APPLIED
+  REVERSAL_APPLIED
+  ADJUSTMENT_APPLIED
+}
+
+// NEW — Standalone audit log; no FK enforcement to support multiple entity types
+model AuditEvent {
+  id          String      @id @default(cuid())
+  action      AuditAction
+  entityType  String
+  entityId    String
+  actorId     String?
+  beforeState String?
+  afterState  String?
+  metadata    String?
+  createdAt   DateTime    @default(now())
+}
