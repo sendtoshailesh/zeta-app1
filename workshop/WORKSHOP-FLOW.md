@@ -8,20 +8,24 @@ When you finish your steps — wait for the next role to complete theirs before 
 ## The Pipeline
 
 ```
-PM → brd-agent → user-story-agent → plan-agent → Issues + Plan ready
-                                                        ↓
+PM → brd-agent → user-story-agent → Issues created
+                                         ↓
 Architect → design-agent → assign DATABASE Issues to Copilot
-                                                        ↓
+                                         ↓
 Backend Dev → assign BACKEND Issues to Copilot → unit-test-agent
-                                                        ↓
+                                         ↓
 UI Dev → assign FRONTEND Issues to Copilot
-                                                        ↓
+                                         ↓
 QA → playwright-agent → run tests
 ```
 
 ---
 
 ## How Agents Work
+
+You can run agents from **GitHub.com** or from **VS Code**. Pick one approach and use it consistently throughout the workshop.
+
+### Option A — GitHub.com (Agents Tab)
 
 1. Go to your repo on your GitHub Enterprise instance → click the **Agents tab**
 2. Click **New session**
@@ -34,7 +38,34 @@ QA → playwright-agent → run tests
 
 ---
 
+### Option B — VS Code (Cloud Agents)
+
+**One-time setup — complete this before the workshop starts:**
+
+1. Install **VS Code** (latest stable or Insiders build)
+2. Install the **GitHub Copilot** and **GitHub Copilot Chat** extensions
+3. Sign in to GitHub via the extensions
+
+> No MCP or Personal Access Token configuration is required.
+> Cloud agents run on GitHub's remote infrastructure and have native access to your repository and Issues.
+
+**Running an agent in VS Code:**
+
+1. Open Copilot Chat (`Ctrl+Alt+I` / `Cmd+Alt+I`)
+2. Click **New Chat** → click the session type dropdown → select **Cloud**
+3. Click the agent picker → select the agent (e.g. `brd-agent`)
+4. Type your instruction and press Enter
+5. The agent runs remotely on GitHub's infrastructure, pushes a branch,
+   and opens a **Pull Request** on GitHub automatically
+6. Go to the **Pull Requests tab** on GitHub.com to review and merge — same as Option A
+
+> See [VS Code Cloud Agents documentation](https://code.visualstudio.com/docs/copilot/agents/cloud-agents) for more detail.
+
+---
+
 ## How to Review a Pull Request
+
+> **GitHub.com:** This step is always done on GitHub.com regardless of which option you used to run the agent.
 
 1. Go to the **Pull Requests tab** on GitHub
 2. Open the PR raised by the agent
@@ -52,10 +83,15 @@ You go first. No one can start until you finish.
 
 ### Step 1 — Create the BRD
 
-Go to the **Agents tab** → New session → select **brd-agent** and type:
+**If using GitHub.com:** Go to the **Agents tab** → New session → select **brd-agent**
+
+**If using VS Code:** Open Copilot Chat → New Chat → Cloud → select `brd-agent`
+
+Type:
 ```
 Create a BRD from Issue #1  -- Note issue number could be different in your case. Enter appropriate number
 ```
+and press **Enter**
 
 Wait for the agent to raise a PR with `docs/requirements/BRD.md`
 
@@ -71,10 +107,15 @@ Wait for the agent to raise a PR with `docs/requirements/BRD.md`
 
 ### Step 2 — Create User Stories
 
-Go to the **Agents tab** → New session → select **user-story-agent** and type:
+**If using GitHub.com:** Go to the **Agents tab** → New session → select **user-story-agent**
+
+**If using VS Code:** Open Copilot Chat → New Chat → Cloud → select `user-story-agent`
+
+Type:
 ```
 Create user stories from the BRD
 ```
+and press **Enter**
 
 Wait for the agent to raise a PR with files in the `issues/` folder.
 
@@ -90,29 +131,7 @@ Wait for the agent to raise a PR with files in the `issues/` folder.
 > After you merge, GitHub Actions automatically creates the Issues with labels.
 > Check the **Issues tab** — you should see all issues appear within 1-2 minutes.
 
-**Hand off to next step** — do not hand off to Architect yet.
-
----
-
-### Step 3 — Create Sprint Plan
-
-Go to the **Agents tab** → New session → select **plan-agent** and type:
-```
-Create a sprint plan from the BRD and Issues
-```
-
-Wait for the agent to raise a PR with `docs/requirements/plan.md`
-
-**Review — check these things:**
-- Every Issue file in the `issues/` folder appears in the sprint table
-- Sprint 1 = primary slice only (not all issues at once)
-- DATABASE steps come before BACKEND, which come before FRONTEND — within every sprint
-- Every BRD Functional Requirement (FR-001 etc.) appears in the Traceability table
-- The Risk Register has at least 3 risks with mitigations
-
-**Merge when satisfied.**
-
-**Hand off to Architect** — tell them Issues and plan are ready.
+**Hand off to Architect** — tell them Issues are ready.
 
 ---
 
@@ -122,10 +141,15 @@ Wait for PM to merge both PRs and confirm Issues are visible in the Issues tab.
 
 ### Step 1 — Create Design Document
 
-Go to the **Agents tab** → New session → select **design-agent** and type:
+**If using GitHub.com:** Go to the **Agents tab** → New session → select **design-agent**
+
+**If using VS Code:** Open Copilot Chat → New Chat → Cloud → select `design-agent`
+
+Type:
 ```
 Create the design document and schema from the BRD and Issues
 ```
+and press **Enter**
 
 Wait for PR with `docs/design/design-doc.md` and updated `src/backend/prisma/schema.prisma`
 
@@ -141,24 +165,27 @@ Wait for PR with `docs/design/design-doc.md` and updated `src/backend/prisma/sch
 
 ### Step 2 — Assign DATABASE Issues to Copilot
 
-Open the **Issues tab**. Find the issue labelled `database` with the lowest Assignment Order step.
+**If using GitHub.com:** Open the **Issues tab** → find the issue labelled `database` with the lowest Assignment Order step → open it → Assignees → select **Copilot**
 
-Open it → read the `## Assignment Order` section → it tells you exactly when to assign it.
+**If using VS Code:** Open Copilot Chat → New Chat → select **Cloud** → describe the task referencing the Issue number and press **Enter**
 
-Assign it to Copilot:
+Find the issue labelled `database` with the lowest Assignment Order step and read the `## Assignment Order` section → it tells you exactly when to assign it.
+
 ```
-Issues tab → open [DATABASE] Issue → Assignees → select Copilot
+[GitHub.com]  Issues tab → open [DATABASE] Issue → Assignees → select Copilot
+[VS Code]     Copilot Chat → New Chat → Cloud → describe task
 ```
 
-> If Copilot does not appear as an assignee option — coding agent is not
+> If Copilot does not appear as an assignee option on GitHub.com — coding agent is not
 > enabled for your account. Contact your IT or admin team.
 
 Wait for PR with updated schema, migration files, and seed data.
 
 **Optional — use review-agent to check the PR automatically:**
-```
-Agents tab → New session → review-agent → "Review the PR for Issue #N"
-```
+
+- **If using GitHub.com:** Agents tab → New session → `review-agent` → type `Review the PR for Issue #N`
+- **If using VS Code:** Open Copilot Chat → New Chat → Cloud → select `review-agent` → type `Review the PR for Issue #N` and press **Enter**
+
 The review-agent will post a structured pass/fail checklist as a PR review comment.
 
 **If reviewing manually, check these things:**
@@ -180,24 +207,27 @@ Wait for Architect to confirm all DATABASE Issues are merged.
 
 ### Step 1 — Assign BACKEND Issues to Copilot
 
-Open the **Issues tab**. Find the issue labelled `backend` with the lowest Assignment Order step.
+**If using GitHub.com:** Open the **Issues tab** → find the issue labelled `backend` with the lowest Assignment Order step → open it → Assignees → select **Copilot**
 
-Open it → read the `## Assignment Order` section → it tells you exactly when to assign it.
+**If using VS Code:** Open Copilot Chat → New Chat → select **Cloud** → describe the task referencing the Issue number and press **Enter**
 
-Assign it to Copilot:
+Find the issue labelled `backend` with the lowest Assignment Order step and read the `## Assignment Order` section → it tells you exactly when to assign it.
+
 ```
-Issues tab → open [BACKEND] Issue → Assignees → select Copilot
+[GitHub.com]  Issues tab → open [BACKEND] Issue → Assignees → select Copilot
+[VS Code]     Copilot Chat → New Chat → Cloud → describe task
 ```
 
-> If Copilot does not appear as an assignee option — coding agent is not
+> If Copilot does not appear as an assignee option on GitHub.com — coding agent is not
 > enabled for your account. Contact your IT or admin team.
 
 Wait for PR with new files in `src/backend/routes/` and `src/backend/controllers/`
 
 **Optional — use review-agent to check the PR automatically:**
-```
-Agents tab → New session → review-agent → "Review the PR for Issue #N"
-```
+
+- **If using GitHub.com:** Agents tab → New session → `review-agent` → type `Review the PR for Issue #N`
+- **If using VS Code:** Open Copilot Chat → New Chat → Cloud → select `review-agent` → type `Review the PR for Issue #N` and press **Enter**
+
 The review-agent will post a structured pass/fail checklist as a PR review comment.
 
 **If reviewing manually, check these things:**
@@ -214,10 +244,15 @@ The review-agent will post a structured pass/fail checklist as a PR review comme
 
 ### Step 2 — Generate Unit Tests
 
-Once all BACKEND Issues are merged, go to the **Agents tab** → New session → select **unit-test-agent** and type:
+**If using GitHub.com:** Go to the **Agents tab** → New session → select **unit-test-agent**
+
+**If using VS Code:** Open Copilot Chat → New Chat → Cloud → select `unit-test-agent`
+
+Type:
 ```
 Generate Jest unit tests from the [BACKEND] Issue
 ```
+and press **Enter**
 
 Wait for PR with test files in `src/backend/__tests__/`
 
@@ -237,24 +272,27 @@ Wait for Backend Dev to confirm all BACKEND Issues are merged.
 
 ### Step 1 — Assign FRONTEND Issues to Copilot
 
-Open the **Issues tab**. Find the issue labelled `frontend` with the lowest Assignment Order step.
+**If using GitHub.com:** Open the **Issues tab** → find the issue labelled `frontend` with the lowest Assignment Order step → open it → Assignees → select **Copilot**
 
-Open it → read the `## Assignment Order` section → it tells you exactly when to assign it.
+**If using VS Code:** Open Copilot Chat → New Chat → select **Cloud** → describe the task referencing the Issue number and press **Enter**
 
-Assign it to Copilot:
+Find the issue labelled `frontend` with the lowest Assignment Order step and read the `## Assignment Order` section → it tells you exactly when to assign it.
+
 ```
-Issues tab → open [FRONTEND] Issue → Assignees → select Copilot
+[GitHub.com]  Issues tab → open [FRONTEND] Issue → Assignees → select Copilot
+[VS Code]     Copilot Chat → New Chat → Cloud → describe task
 ```
 
-> If Copilot does not appear as an assignee option — coding agent is not
+> If Copilot does not appear as an assignee option on GitHub.com — coding agent is not
 > enabled for your account. Contact your IT or admin team.
 
 Wait for PR with new pages and components in `src/frontend/src/`
 
 **Optional — use review-agent to check the PR automatically:**
-```
-Agents tab → New session → review-agent → "Review the PR for Issue #N"
-```
+
+- **If using GitHub.com:** Agents tab → New session → `review-agent` → type `Review the PR for Issue #N`
+- **If using VS Code:** Open Copilot Chat → New Chat → Cloud → select `review-agent` → type `Review the PR for Issue #N` and press **Enter**
+
 The review-agent will post a structured pass/fail checklist as a PR review comment.
 
 **If reviewing manually, check these things:**
@@ -276,10 +314,15 @@ Wait for UI Dev to confirm all FRONTEND Issues are merged.
 
 ### Step 1 — Generate Playwright Tests
 
-Go to the **Agents tab** → New session → select **playwright-agent** and type:
+**If using GitHub.com:** Go to the **Agents tab** → New session → select **playwright-agent**
+
+**If using VS Code:** Open Copilot Chat → New Chat → Cloud → select `playwright-agent`
+
+Type:
 ```
 Generate Playwright tests from the [PLAYWRIGHT] Issue
 ```
+and press **Enter**
 
 Wait for PR with test files in `e2e/`
 
@@ -351,4 +394,26 @@ npx playwright test --ui
 Email:    test@example.com
 Password: password123
 ```
-- If still failing — run `cd src/backend && npm run db:seed`
+- If still failing — run `cd src/backend && npx prisma db seed`
+
+---
+
+## VS Code Troubleshooting
+
+**Agent not in the VS Code agent picker**
+- Make sure you selected **Cloud** as the session type — not Ask or Edit mode
+- The `.github/agents/` folder must be present on the default branch of the repo
+- Reload VS Code window (`Ctrl+Shift+P` → "Developer: Reload Window") and try again
+
+**Cloud session type not available in the New Chat dropdown**
+- Update VS Code and the GitHub Copilot Chat extension to the latest version
+- Sign out and sign back in to GitHub via the Copilot extension
+
+**Agent runs but no PR appears**
+- Check the **Pull Requests tab** on GitHub.com — the PR may already be there
+- If the session timed out, re-run the agent with the same instruction
+
+**Assigning Issues to the Copilot coding agent from VS Code**
+- Open Copilot Chat → New Chat → select **Cloud** as the session type
+- Describe the task and reference the Issue number
+- See [VS Code Cloud Agents documentation](https://code.visualstudio.com/docs/copilot/agents/cloud-agents)
