@@ -7,7 +7,7 @@
     "start": "node dist/index.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "db:migrate": "prisma migrate dev",
+    "db:migrate": "node prisma/create-migration.js && prisma migrate dev",
     "db:generate": "prisma generate",
     "db:seed": "ts-node prisma/seed.ts",
     "lint": "eslint src --ext .ts"
